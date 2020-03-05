@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="bgc">
+      <div class="bgc1"></div>
+      <div class="bgc-line">
+        <img src="./images/method-draw-image-2.svg" alt="" />
+      </div>
+      <div class="bgc-content">
+        <h1>
+          Туристическая карта <br />
+          Мариуполя
+        </h1>
+        <p>
+          Здесь вы можете познакомится с нашим городом поближе. Узнать его
+          историю, познакомится с достопримечательностями и заведениями города.
+          А также пройтись с экскурсией по городу
+        </p>
+        <div class="btn-div">
+          <button type="button" class="bgc-btn">Просмотреть</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="cards-section">
+      <div class="container">
+        <div class="row cards">
+          <div class="card col-4">
+            <div class="card-inner">
+              <div>
+                <img src="./images/MariupolHistory.png" alt="history card" />
+              </div>
+              <div>
+                <h3>История города</h3>
+                <p>
+                  Здесь вы можете познакомится с историей становления города
+                  Мариуполь
+                </p>
+              </div>
+              <button type="button">
+                <a href="./history/history.html">Перейти</a>
+              </button>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-inner">
+              <div>
+                <img src="./images/MariupolMap.jpg" alt="history card" />
+              </div>
+              <div>
+                <h3>Карта города</h3>
+                <p>
+                  На карте отображаются достопримечательности и заведения города
+                </p>
+              </div>
+              <button type="button">
+                <a href="./leafletMap/map.html">Перейти</a>
+              </button>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-inner">
+              <div>
+                <img src="./images/MariupolGid.jpg" alt="history card" />
+              </div>
+              <div>
+                <h3>Онлайн гид</h3>
+                <p>
+                  Можете пройти экскурсию по достопримечательностям вместе с
+                  телефоном в руке
+                </p>
+              </div>
+              <button type="button">
+                <a href="./onlineGid/index.html">Перейти</a>
+              </button>
+              <!-- <div class="not-work">
+                <div>
+                  <span>В разработке</span>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="./index.js"></script>
+  </body>
+</html>

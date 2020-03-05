@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""
+    />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./map.css" />
+  </head>
+  <body>
+    <div class="row">
+      <div class="map-btns col-lg-4 hide-filter">
+        <button type="button" class="hideBtn">></button>
+        <div class="filter-btns hide">
+          <button class="map-btn-all active">Все</button>
+          <button class="map-btn-attractions">Достопримечательности</button>
+          <button class="map-btn-restaurants">Рестораны</button>
+        </div>
+      </div>
+      <div class="map col-lg-8 hide-filter">
+        <div id="mapid"></div>
+      </div>
+    </div>
+    <div class="pop-up-outer">
+      <div class="pop-up-inner"></div>
+    </div>
+    <script src="./map.js"></script>
+  </body>
+</html>

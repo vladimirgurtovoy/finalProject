@@ -1,0 +1,142 @@
+body {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  background-image: url(https://mrpl.city/uploads/news/968x504/s6ukcqv3ywwxznyw.jpeg);
+  background-size: cover;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 976px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.col-4 {
+  flex-basis: 33.33%;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.bgc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 1;
+  background-color: #0f7dc2;
+  transition: all 2s;
+  color: #f7c414;
+  z-index: 1;
+}
+
+.bgc.hide {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bgc1 {
+  width: 100%;
+  height: 52%;
+  background-color: #fff;
+}
+.bgc-line {
+  position: fixed;
+  width: 100%;
+  top: 44%;
+  transform: translateY(-10px);
+}
+.bgc-line > img {
+  width: 100%;
+}
+.bgc-content {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.bgc-content > p {
+  flex-basis: 100%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+h1 {
+  flex-basis: 100%;
+}
+.btn-div {
+  flex-basis: 100%;
+}
+.btn-div > button {
+  border: none;
+  border-radius: 2px;
+  padding: 10px;
+  color: #f7c414;
+  font-weight: bold;
+  background-color: #fff;
+}
+
+.cards-section {
+  background-color: rgba(15, 125, 194, 0.7);
+}
+.cards {
+  height: 100vh;
+  align-items: center;
+  text-align: center;
+}
+.card-inner {
+  position: relative;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+.card-inner:hover {
+  border: 2px solid #f7c414;
+}
+.card img {
+  width: 100%;
+}
+.card button {
+  background-color: #fff;
+  border: 1px solid #0f7dc2;
+  border-radius: 2px;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+}
+.card button:hover {
+  border: 1px solid #f7c414;
+}
+.not-work {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.8);
+}
+.not-work > div {
+  padding: 10px;
+  border-radius: 2px;
+  background-color: #f7c414;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
