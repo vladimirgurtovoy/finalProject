@@ -1,5 +1,9 @@
+let status = 0;
 const mymap = L.map("mapid").setView([47.097053, 37.542409], 12);
-
+let markers = [];
+let mapLayers;
+let restaurants;
+let attractions;
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -19,64 +23,170 @@ var LeafIcon = L.Icon.extend({
 L.icon = function(options) {
   return new L.Icon(options);
 };
+//----------------------------------
+const request = require("request-promise");
+const cheerio = require("cheerio");
 
-let places = [];
-places[0] = {
-  name: "Городской парк",
-  type: "",
-  description: `Городско́й сад города Мариуполь — центральный парк культуры и отдыха (в послевоенное время официальное название — Детский ЦПКиО), основан в 1863 году на, тогда ещё южной, окраине города. Расположен в Центральном районе Мариуполя, ограничен проспектом Металлургов, улицей Семенишина и крутым склоном у Слободки.
+const url = `https://tomato.ua/Mariupol/category/restaurant`;
+const places = [];
 
-  В городском саду расположены 3 памятника:
-  
-  Лётчикам-героям Великой Отечественной войны Семенишину и Лавицкому.
-  Героям Гражданской Войны («Пушка»).
-  Памятник героям Великой Отечественной войны.
-  На территории Горсада расположен летний кинотеатр, городской дворец пионеров, дворец спорта «Спартак» и др. В саду также находятся небольшой макет-водоём Черного и Азовского морей.`,
-  images: ["CityPark1.jpg", "CityPark2.jpg", "CityPark3.jpg"],
-  adress: "",
-  markerPosition: [47.087633, 37.544744],
-  markerIcon: new LeafIcon({ iconUrl: "./images/markers/CityParkMarker.png" })
-};
-
-places[1] = {
-  name: "MAFIA",
-  type: "Restaurants",
-  description:
-    "MAFIA — це сучасний демократичний ресторан італійської та японської кухні з якісним обслуговуванням та цінами, доступними для людей із середнім рівнем достатку. Меню ресторану поєднує в собі дві найпопулярніші в Україні кулінарні традиції — японську й італійську, і в цьому криється один із секретів успіху. Фірмова метрова піца, регулярні спеціальні пропозиції та акції вже стали візитними картками MAFIA.",
-  images: ["Mafia1.jpg"],
-  adress:
-    "ТРЦ ПортCity, Запорізьке шосе, 2, Маріуполь, Донецька область, 87500",
-  markerPosition: [47.114772, 37.508811],
-  markerIcon: new LeafIcon({ iconUrl: "./images/markers/mafia-marker.png" })
-};
-
-let markers = [];
-places.forEach(place => {
-  markers.push(
-    L.marker(
-      place.markerPosition,
-      { icon: place.markerIcon },
-      { title: place.name }
-    ).addTo(mymap)
-  );
-});
-let attractions = L.layerGroup([markers[0]]);
-let restaurants = L.layerGroup([markers[1]]);
-let mapLayers = [attractions, restaurants];
-
-addLayersToMap();
-
-markers.forEach((marker, index) => {
-  marker.addEventListener("click", e => {
-    outerPopUp.classList.add("open");
-    mymap.panTo(places[index].markerPosition);
-    innerPopUp.innerHTML = `
-    <h2>${places[index].name}</h2>
-    <p>${places[index].description}</p>
-    <img src="./images/${places[index].images[0]}" alt="${places[index].name} image ${index}">
-    `;
+const parse = async () => {
+  const response = await request(url);
+  let $ = cheerio.load(response, {
+    xml: {
+      normalizeWhitespace: true
+    }
   });
-});
+
+  const companyCard = $(".search_item");
+  const countAllRest = companyCard.length;
+  console.log(countAllRest);
+  companyCard.each((id, card) => {
+    let domCard = $(card);
+    let title = domCard.find(".title").text();
+    makeObject(domCard, title);
+  });
+  if (countRestaurants >= countAllRest) {
+    places.forEach((place, index) => {
+      makeFetchLocation(place, index);
+    });
+  }
+}; //<- end function parse()
+
+parse(); //call function
+
+//create markers on the map
+function createMarkers() {
+  places.forEach(place => {
+    if (place.markerPosition !== "") {
+      markers.push(
+        L.marker(place.markerPosition, {
+          icon: place.markerIcon,
+          title: place.name,
+          clickable: true,
+          draggable: true
+        }).addTo(mymap)
+      );
+    }
+  });
+
+  //add event to markers
+  markers.forEach(marker => {
+    let index;
+    places.forEach((place, ind) => {
+      if (place.name == marker.options.title) {
+        index = ind;
+      }
+    });
+
+    marker.addEventListener("click", e => {
+      outerPopUp.classList.add("open");
+      mymap.panTo(places[index].markerPosition);
+      parseInfo(places[index]);
+    });
+  });
+} //<- End function createMarkers()
+
+//create layers
+function createLayers() {
+  attractions = L.layerGroup([markers[0]]);
+  let arr = [];
+  let countMarkers = 0;
+  markers.forEach((m, index) => {
+    if (places[index].type == "restaurants") {
+      arr.push(m);
+      countMarkers++;
+    }
+  });
+
+  restaurants = L.layerGroup(arr);
+  mapLayers = [attractions, restaurants];
+  if (countMarkers >= countRestaurants) {
+    addLayersToMap();
+  }
+} //end of function createLayers()
+
+let countRestaurants = 0;
+
+//create object with restaurant info
+function makeObject(domCard, title) {
+  let obj = {
+    type: "restaurants",
+    name: title,
+    href: domCard.find(".search_item_img").attr("href"),
+    address: domCard.find(".address").text(),
+    markerPosition: "",
+    description: "",
+    images: [],
+    markerIcon: new LeafIcon({
+      iconUrl: domCard
+        .find(".search_item_img")
+        .css("background-image")
+        .replace(/.*\s?url\([\'\"]?/, "")
+        .replace(/[\'\"]?\).*/, "")
+    })
+  };
+  countRestaurants++;
+  places.push(obj);
+}
+
+//parse info about restaurant
+async function parseInfo(place) {
+  let response = await request(place.href);
+  let $ = cheerio.load(response, {
+    xml: {
+      normalizeWhitespace: true
+    }
+  });
+  let info = $(".panel");
+  console.log("kuku", info.find(".all").text().length);
+  if (info.find(".all").text().length == 0) {
+    place.description = info.find(".text_content").text();
+  } else {
+    place.description = info.find(".all").text();
+  }
+  console.log(place.href + "/photos");
+  parseImages(place.href + "/photos");
+
+  createPopUpContent(place);
+} //end of function parseInfo()
+
+async function parseImages(imgUrl) {
+  const response = await request(imgUrl);
+  $ = cheerio.load(response, {
+    xml: {
+      normalizeWhitespace: true
+    }
+  });
+  info = $(".image_block");
+  console.log(info.length);
+  // let images = info.find(".images_col>.image_block");
+  // console.log(images);
+}
+
+function createPopUpContent(place) {
+  innerPopUp.innerHTML = `
+      <h2>${place.name}</h2>
+      <p>${place.address}</p>
+      <p>${place.description}</p>
+      
+      `;
+}
+
+//get location of restaurant on the map
+async function makeFetchLocation(place, index) {
+  let res = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${"мариуполь " +
+      place.name}&key=AIzaSyAfaEcMF7iaeuaK0VT8POocFReZ7IJ-LdQ`
+  );
+  let json = await res.json();
+  let data = await json.results[0].geometry.location;
+  place.markerPosition = [data.lat, data.lng];
+  if (index >= places.length - 1) {
+    createMarkers();
+    createLayers();
+  }
+} //end function of makeFetchLocation()
 
 //pop-up javascript ↓
 const innerPopUp = document.querySelector(".pop-up-inner");
@@ -124,6 +234,7 @@ mapBtnAll.addEventListener("click", btn => {
   addLayersToMap();
 });
 
+//works with layers
 function addLayersToMap() {
   mapLayers.forEach(layer => {
     mymap.addLayer(layer);
@@ -136,6 +247,7 @@ function removeLayersFromMap() {
   });
 }
 
+//work with layers buttons
 function activeLayerBtn(elem) {
   removeActiveClass();
   if (!elem.classList.contains("active")) {
