@@ -1,9 +1,9 @@
-let status = 0;
-const mymap = L.map("mapid").setView([47.097053, 37.542409], 12);
-let markers = [];
-let mapLayers;
-let restaurants;
-let attractions;
+const mymap = L.map("mapid").setView([47.097053, 37.542409], 12); //create map
+let markers = []; //array of markers
+let mapLayers; //array of map layers
+let restaurants; //array of restaurants markers
+let attractions; //array of attractions markers
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -24,36 +24,23 @@ L.icon = function(options) {
   return new L.Icon(options);
 };
 //----------------------------------
-const request = require("request-promise");
-const cheerio = require("cheerio");
-
-const url = `https://tomato.ua/Mariupol/category/restaurant`;
+const url = `https://cors-anywhere.herokuapp.com/tomato.ua/Mariupol/category/restaurant`;
 const places = [];
 
-const parse = async () => {
-  const response = await request(url);
-  let $ = cheerio.load(response, {
-    xml: {
-      normalizeWhitespace: true
-    }
-  });
+makeFetch();
 
-  const companyCard = $(".search_item");
-  const countAllRest = companyCard.length;
-  console.log(countAllRest);
-  companyCard.each((id, card) => {
-    let domCard = $(card);
-    let title = domCard.find(".title").text();
-    makeObject(domCard, title);
+//get places
+async function makeFetch() {
+  const res = await fetch(
+    "https://vladimirgurtovoy.github.io/parse/places.json"
+  );
+  const data = await res.json();
+  data.forEach(d => {
+    makeObject(d);
   });
-  if (countRestaurants >= countAllRest) {
-    places.forEach((place, index) => {
-      makeFetchLocation(place, index);
-    });
-  }
-}; //<- end function parse()
-
-parse(); //call function
+  createMarkers();
+  createLayers();
+} //end function MakeFetch()
 
 //create markers on the map
 function createMarkers() {
@@ -68,7 +55,7 @@ function createMarkers() {
         }).addTo(mymap)
       );
     }
-  });
+  }); //end function createMarkers()
 
   //add event to markers
   markers.forEach(marker => {
@@ -79,10 +66,11 @@ function createMarkers() {
       }
     });
 
+    //add event by click on marker
     marker.addEventListener("click", e => {
       outerPopUp.classList.add("open");
       mymap.panTo(places[index].markerPosition);
-      parseInfo(places[index]);
+      createPopUpContent(places[index]);
     });
   });
 } //<- End function createMarkers()
@@ -91,79 +79,35 @@ function createMarkers() {
 function createLayers() {
   attractions = L.layerGroup([markers[0]]);
   let arr = [];
-  let countMarkers = 0;
   markers.forEach((m, index) => {
     if (places[index].type == "restaurants") {
       arr.push(m);
-      countMarkers++;
     }
-  });
+  }); //end function createLayers()
 
-  restaurants = L.layerGroup(arr);
+  restaurants = L.layerGroup(arr); //set group marker
   mapLayers = [attractions, restaurants];
-  if (countMarkers >= countRestaurants) {
-    addLayersToMap();
-  }
+  addLayersToMap();
 } //end of function createLayers()
 
-let countRestaurants = 0;
-
 //create object with restaurant info
-function makeObject(domCard, title) {
+function makeObject(item) {
   let obj = {
-    type: "restaurants",
-    name: title,
-    href: domCard.find(".search_item_img").attr("href"),
-    address: domCard.find(".address").text(),
-    markerPosition: "",
-    description: "",
+    type: item.type,
+    name: item.name,
+    href: item.href,
+    address: item.address,
+    markerPosition: item.markerPosition,
+    description: item.description,
     images: [],
     markerIcon: new LeafIcon({
-      iconUrl: domCard
-        .find(".search_item_img")
-        .css("background-image")
-        .replace(/.*\s?url\([\'\"]?/, "")
-        .replace(/[\'\"]?\).*/, "")
+      iconUrl: item.markerIcon
     })
   };
-  countRestaurants++;
   places.push(obj);
-}
+} //end function makeObject()
 
-//parse info about restaurant
-async function parseInfo(place) {
-  let response = await request(place.href);
-  let $ = cheerio.load(response, {
-    xml: {
-      normalizeWhitespace: true
-    }
-  });
-  let info = $(".panel");
-  console.log("kuku", info.find(".all").text().length);
-  if (info.find(".all").text().length == 0) {
-    place.description = info.find(".text_content").text();
-  } else {
-    place.description = info.find(".all").text();
-  }
-  console.log(place.href + "/photos");
-  parseImages(place.href + "/photos");
-
-  createPopUpContent(place);
-} //end of function parseInfo()
-
-async function parseImages(imgUrl) {
-  const response = await request(imgUrl);
-  $ = cheerio.load(response, {
-    xml: {
-      normalizeWhitespace: true
-    }
-  });
-  info = $(".image_block");
-  console.log(info.length);
-  // let images = info.find(".images_col>.image_block");
-  // console.log(images);
-}
-
+//set popup content
 function createPopUpContent(place) {
   innerPopUp.innerHTML = `
       <h2>${place.name}</h2>
@@ -171,22 +115,7 @@ function createPopUpContent(place) {
       <p>${place.description}</p>
       
       `;
-}
-
-//get location of restaurant on the map
-async function makeFetchLocation(place, index) {
-  let res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${"мариуполь " +
-      place.name}&key=AIzaSyAfaEcMF7iaeuaK0VT8POocFReZ7IJ-LdQ`
-  );
-  let json = await res.json();
-  let data = await json.results[0].geometry.location;
-  place.markerPosition = [data.lat, data.lng];
-  if (index >= places.length - 1) {
-    createMarkers();
-    createLayers();
-  }
-} //end function of makeFetchLocation()
+} //end function createPopUpContent()
 
 //pop-up javascript ↓
 const innerPopUp = document.querySelector(".pop-up-inner");
@@ -194,16 +123,19 @@ const outerPopUp = document.querySelector(".pop-up-outer");
 
 outerPopUp.addEventListener("click", hidePopUp);
 
+//hide popUp
 function hidePopUp(e) {
   if (e.target == e.currentTarget) {
     outerPopUp.classList.remove("open");
   }
 }
-const mapBtnAll = document.querySelector(".map-btn-all");
-const mapBtnRestaurants = document.querySelector(".map-btn-restaurants");
-const mapBtnAttractions = document.querySelector(".map-btn-attractions");
-const mapBtnLayers = [mapBtnAll, mapBtnAttractions, mapBtnRestaurants];
 
+const mapBtnAll = document.querySelector(".map-btn-all"); //filter button all
+const mapBtnRestaurants = document.querySelector(".map-btn-restaurants"); //filter button restaurants
+const mapBtnAttractions = document.querySelector(".map-btn-attractions"); //filter button attractions
+const mapBtnLayers = [mapBtnAll, mapBtnAttractions, mapBtnRestaurants]; //array of filter buttons
+
+//add event by restaurant Btn click
 mapBtnRestaurants.addEventListener("click", btn => {
   if (btn.target.classList.contains("active")) {
     addLayersToMap();
@@ -216,6 +148,7 @@ mapBtnRestaurants.addEventListener("click", btn => {
   }
 });
 
+//add event by attraction Btn click
 mapBtnAttractions.addEventListener("click", btn => {
   if (btn.target.classList.contains("active")) {
     addLayersToMap();
@@ -228,6 +161,7 @@ mapBtnAttractions.addEventListener("click", btn => {
   }
 });
 
+//add event by ALL Btn click
 mapBtnAll.addEventListener("click", btn => {
   activeLayerBtn(btn.target);
   removeLayersFromMap();
@@ -235,12 +169,13 @@ mapBtnAll.addEventListener("click", btn => {
 });
 
 //works with layers
+//add layers to map
 function addLayersToMap() {
   mapLayers.forEach(layer => {
     mymap.addLayer(layer);
   });
 }
-
+//remove layers from map
 function removeLayersFromMap() {
   mapLayers.forEach(layer => {
     mymap.removeLayer(layer);
@@ -248,6 +183,7 @@ function removeLayersFromMap() {
 }
 
 //work with layers buttons
+//set active btn
 function activeLayerBtn(elem) {
   removeActiveClass();
   if (!elem.classList.contains("active")) {
@@ -255,16 +191,19 @@ function activeLayerBtn(elem) {
   }
 }
 
+//remove active class
 function removeActiveClass() {
   mapBtnLayers.forEach(btn => {
     btn.classList.remove("active");
   });
 }
+
 let mapBtn = document.querySelector(".map-btns");
 let filterBtn = mapBtn.querySelector(".filter-btns");
 let hideBtn = mapBtn.querySelector(".hideBtn");
 let mapDiv = document.querySelector(".map");
 
+//event on hide btn click
 hideBtn.addEventListener("click", e => {
   if (filterBtn.classList.contains("hide")) {
     filterBtn.classList.remove("hide");
