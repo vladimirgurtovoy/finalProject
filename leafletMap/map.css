@@ -9,7 +9,7 @@ body {
 }
 
 .map-btns.hide-filter {
-  width: 26px;
+  width: 46px;
 }
 .map {
   width: 100vw;
@@ -34,10 +34,13 @@ button {
   border-radius: 4px;
   text-align: center;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+  background-color: #fff;
 }
 .map-btns {
   position: fixed;
-  left: 10px;
+  /* left: 10px; */
+  padding-right: 10px;
+  padding-left: 10px;
   top: 70px;
   width: 25vw;
   overflow: hidden;
@@ -121,4 +124,10 @@ button {
 
 .filter-btns.hide {
   opacity: 0;
+}
+
+@media (max-width: 767px) {
+  .map-btns {
+    width: 100vw;
+  }
 }

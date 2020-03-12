@@ -23,7 +23,8 @@ var LeafIcon = L.Icon.extend({
 L.icon = function(options) {
   return new L.Icon(options);
 };
-//----------------------------------
+
+//---------------------------------------------
 const url = `https://cors-anywhere.herokuapp.com/tomato.ua/Mariupol/category/restaurant`;
 const places = [];
 
@@ -113,7 +114,6 @@ function createPopUpContent(place) {
       <h2>${place.name}</h2>
       <p>${place.address}</p>
       <p>${place.description}</p>
-      
       `;
 } //end function createPopUpContent()
 
