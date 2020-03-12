@@ -50,8 +50,7 @@ function createMarkers() {
       markers.push(
         L.marker(place.markerPosition, {
           icon: place.markerIcon,
-          title: place.name,
-          clickable: true
+          title: place.name
         }).addTo(mymap)
       );
     }
