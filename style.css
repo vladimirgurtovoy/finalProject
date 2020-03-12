@@ -167,6 +167,9 @@ a {
   .container {
     width: 100%;
   }
+  .bgc {
+    height: 100%;
+  }
   .col-md-6 {
     flex-basis: 50%;
   }
