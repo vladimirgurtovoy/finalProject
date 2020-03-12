@@ -32,6 +32,12 @@ h4 {
   padding-right: 8px;
   margin-bottom: 16px;
 }
+.main-title {
+  margin-bottom: 5%;
+}
+.main-desc {
+  margin-bottom: 5%;
+}
 
 .bgc {
   position: fixed;
