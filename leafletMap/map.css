@@ -129,5 +129,6 @@ button {
 @media (max-width: 767px) {
   .map-btns {
     width: 100vw;
+    top: 80px;
   }
 }
