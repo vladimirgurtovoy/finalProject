@@ -163,7 +163,7 @@ a {
   color: #000;
 }
 
-@media (max-width: 971px) {
+@media (max-width: 975px) {
   .container {
     width: 100%;
   }
