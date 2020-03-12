@@ -125,6 +125,13 @@ button {
   opacity: 0;
 }
 
+@media (max-width: 975px) {
+  .pop-up-inner {
+    width: 90vw;
+    height: 80vh;
+  }
+}
+
 @media (max-width: 767px) {
   .map-btns {
     width: 100vw;
