@@ -8,6 +8,12 @@ body {
 *:after {
   box-sizing: inherit;
 }
+header {
+  width: 100%;
+}
+section {
+  padding: 8px;
+}
 .container {
   width: 976px;
   margin-left: auto;
@@ -22,7 +28,7 @@ body {
   color: white;
 }
 img {
-  max-width: 100%;
+  width: 100%;
   border-radius: 5%;
 }
 .col-4 {
@@ -55,4 +61,16 @@ h2,
 h3,
 h4 {
   text-transform: uppercase;
+}
+
+@media (max-width: 975px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 567px) {
+  .col-md-12 {
+    flex-basis: 100%;
+  }
 }
