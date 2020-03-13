@@ -114,8 +114,12 @@ function createPopUpContent(place) {
       <p>${place.address}</p>
       <p>${place.description}</p>
       <div class="slider">
-        <button class="slider-left slider-btn">Left</button>
-        <button class="slider-right slider-btn">Right</button>
+        <button class="slider-left slider-btn">
+          <img src="./images/arrow.svg" alt="" />
+      	</button>
+      	<button class="slider-right slider-btn">
+          <img src="./images/arrow.svg" alt="" />
+      	</button>
       </div>
       `;
   let sliderDiv = document.querySelector(".slider");

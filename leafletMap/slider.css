@@ -1,3 +1,11 @@
+body {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 .slider {
   margin-left: auto;
   margin-right: auto;
@@ -5,6 +13,11 @@
   max-height: 500px;
   max-width: 500px;
   overflow: hidden;
+  background-color: rgba(128, 128, 128, 0.3);
+}
+
+.slider-img {
+  width: 100%;
 }
 .slider-img.hide {
   /* visibility: hidden; */
@@ -12,15 +25,32 @@
 }
 .slider-left {
   position: absolute;
-  top: 50%;
-  left: 10px;
+  top: 0;
+  left: 0;
 }
 .slider-right {
   position: absolute;
-  top: 50%;
-  right: 10px;
+  top: 0;
+  right: 0;
 }
 
+.slider-right > img {
+  transform: rotate(180deg);
+}
+
+.slider-btn {
+  height: 99%;
+  max-width: 32px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+.slider-btn > img {
+  width: 100%;
+}
+.slider-btn:hover {
+  background-color: rgba(0, 128, 128, 0.7);
+}
 .slider-btn.hide {
   visibility: hidden;
 }
