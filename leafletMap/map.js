@@ -99,7 +99,7 @@ function makeObject(item) {
     address: item.address,
     markerPosition: item.markerPosition,
     description: item.description,
-    images: [],
+    images: item.images,
     markerIcon: new LeafIcon({
       iconUrl: item.markerIcon
     })
@@ -113,9 +113,28 @@ function createPopUpContent(place) {
       <h2>${place.name}</h2>
       <p>${place.address}</p>
       <p>${place.description}</p>
+      <div class="slider">
+        <button class="slider-left slider-btn">Left</button>
+        <button class="slider-right slider-btn">Right</button>
+      </div>
       `;
+  let sliderDiv = document.querySelector(".slider");
+  place.images.forEach((img, ind) => {
+    sliderDiv.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="slider-img slider-img-${ind}">
+      <img
+        src="${img}"
+        alt="${place.name + "-" + ind}"
+      />
+    </div>
+        `
+    );
+  });
   let closeBtn = innerPopUp.querySelector(".popUp-btn");
   closeBtn.addEventListener("click", hidePopUp);
+  slider();
 } //end function createPopUpContent()
 
 //pop-up javascript ↓
@@ -222,3 +241,46 @@ hideBtn.addEventListener("click", e => {
     mapDiv.classList.add("hide-filter");
   }
 });
+
+function slider() {
+  let slider = document.querySelector(".slider");
+  let rightBtn = slider.querySelector(".slider-right");
+  let leftBtn = slider.querySelector(".slider-left");
+  let img = slider.querySelectorAll(".slider-img");
+  let sliderImgCount = 0;
+  hidePhotos();
+  hideButtons();
+  rightBtn.addEventListener("click", e => {
+    sliderImgCount++;
+    hideButtons();
+    hidePhotos();
+  });
+
+  leftBtn.addEventListener("click", e => {
+    sliderImgCount--;
+    hideButtons();
+    hidePhotos();
+  });
+
+  function hidePhotos() {
+    img.forEach(i => {
+      i.classList.add("hide");
+      if (i.classList.contains("slider-img-" + sliderImgCount)) {
+        i.classList.remove("hide");
+      }
+    });
+  }
+
+  function hideButtons() {
+    if (sliderImgCount == 0) {
+      leftBtn.classList.add("hide");
+    }
+    if (sliderImgCount > 0) {
+      leftBtn.classList.remove("hide");
+      rightBtn.classList.remove("hide");
+    }
+    if (sliderImgCount == img.length - 1) {
+      rightBtn.classList.add("hide");
+    }
+  }
+}

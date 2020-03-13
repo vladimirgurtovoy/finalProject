@@ -22,7 +22,7 @@ body {
   height: 100%;
   width: 100%;
 }
-button {
+.map-btns button {
   max-height: 30px;
   text-align: justify;
   margin-bottom: 5px;
