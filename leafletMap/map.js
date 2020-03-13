@@ -50,7 +50,8 @@ function createMarkers() {
       markers.push(
         L.marker(place.markerPosition, {
           icon: place.markerIcon,
-          title: place.name
+          title: place.name,
+          clickable: true
         }).addTo(mymap)
       );
     }
@@ -108,21 +109,27 @@ function makeObject(item) {
 
 //set popup content
 function createPopUpContent(place) {
-  innerPopUp.innerHTML = `
+  innerPopUpContent.innerHTML = `
       <h2>${place.name}</h2>
       <p>${place.address}</p>
       <p>${place.description}</p>
       `;
+  let closeBtn = innerPopUp.querySelector(".popUp-btn");
+  closeBtn.addEventListener("click", hidePopUp);
 } //end function createPopUpContent()
 
 //pop-up javascript ↓
-const innerPopUp = document.querySelector(".pop-up-inner");
 const outerPopUp = document.querySelector(".pop-up-outer");
+const innerPopUp = outerPopUp.querySelector(".pop-up-inner");
+const innerPopUpContent = outerPopUp.querySelector(".pop-up-inner__content");
 
 outerPopUp.addEventListener("click", hidePopUp);
 
 //hide popUp
 function hidePopUp(e) {
+  if (e.currentTarget.classList.contains("popUp-btn")) {
+    outerPopUp.classList.remove("open");
+  }
   if (e.target == e.currentTarget) {
     outerPopUp.classList.remove("open");
   }
