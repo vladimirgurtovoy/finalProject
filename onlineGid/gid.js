@@ -70,6 +70,11 @@ generatedTour.forEach(tour => {
 //location code ↓
 setInterval(1000, map.locate());
 
+L.Routing.control({
+  waypoints: [L.latLng(57.74, 11.94), L.latLng(57.6792, 11.949)],
+  routeWhileDragging: true
+}).addTo(map);
+
 function onLocationFound(e) {
   userLocation = e.latlng;
   console.log(e.latlng.lat);

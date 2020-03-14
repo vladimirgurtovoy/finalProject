@@ -20,7 +20,6 @@ body {
   width: 100%;
 }
 .slider-img.hide {
-  /* visibility: hidden; */
   display: none;
 }
 .slider-left {

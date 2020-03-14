@@ -165,6 +165,10 @@ const mapBtnLayers = [mapBtnAll, mapBtnAttractions, mapBtnRestaurants]; //array 
 
 //add event by restaurant Btn click
 mapBtnRestaurants.addEventListener("click", btn => {
+  filterBtnClick(btn);
+});
+
+function filterBtnClick(btn) {
   if (btn.target.classList.contains("active")) {
     addLayersToMap();
     btn.target.classList.remove("active");
@@ -172,21 +176,17 @@ mapBtnRestaurants.addEventListener("click", btn => {
   } else {
     activeLayerBtn(btn.target);
     removeLayersFromMap();
-    mymap.addLayer(mapLayers[1]);
+    if (btn.target.classList.contains("map-btn-restaurants")) {
+      mymap.addLayer(mapLayers[1]);
+    } else if (btn.target.classList.contains("map-btn-attractions")) {
+      mymap.addLayer(mapLayers[0]);
+    }
   }
-});
+}
 
 //add event by attraction Btn click
 mapBtnAttractions.addEventListener("click", btn => {
-  if (btn.target.classList.contains("active")) {
-    addLayersToMap();
-    btn.target.classList.remove("active");
-    mapBtnAll.classList.add("active");
-  } else {
-    activeLayerBtn(btn.target);
-    removeLayersFromMap();
-    mymap.addLayer(mapLayers[0]);
-  }
+  filterBtnClick(btn);
 });
 
 //add event by ALL Btn click

@@ -7,34 +7,35 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Карта Мариуполя</title>
+    <!-- link normalize -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
+    <!-- link Roboto -->
     <link
       href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic"
       rel="stylesheet"
     />
+    <!-- link leaflet css for map -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
       integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
       crossorigin=""
     />
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <!-- Leaflet's map script -->
     <script
       src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
       integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
       crossorigin=""
     ></script>
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic"
-      rel="stylesheet"
-    />
+    <!-- link own css's -->
     <link rel="stylesheet" href="./map.css" />
     <link rel="stylesheet" href="./slider.css" />
   </head>
   <body>
+    <!-- filter's block -->
     <div class="map-btns hide-filter">
       <button type="button" class="hideBtn">></button>
       <div class="filter-btns hide">
@@ -43,10 +44,11 @@
         <button class="map-btn-restaurants">Рестораны</button>
       </div>
     </div>
-
+    <!-- div for map -->
     <div class="map hide-filter">
       <div id="mapid"></div>
     </div>
+    <!-- popUp with place info -->
     <div class="pop-up-outer">
       <div class="pop-up-inner">
         <button type="button" class="popUp-btn">
@@ -55,6 +57,7 @@
         <div class="pop-up-inner__content"></div>
       </div>
     </div>
+    <!-- own script -->
     <script src="./map.js"></script>
   </body>
 </html>
